@@ -1,4 +1,5 @@
 import { fileURLToPath, URL } from 'url';
+import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -36,6 +37,9 @@ export default {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
