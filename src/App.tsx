@@ -1,33 +1,39 @@
-import React, { useState, useCallback } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useState, useCallback } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { getListStyle } from './styles/getListStyle';
+import { getItemStyle } from './styles/getItemStyle';
+
+type Item = {
+  id: string;
+  content: string;
+};
+
+type Reorder = (list: Item[], startIndex: number, endIndex: number) => Item[];
+type OnDragEnd = (result: DropResult) => void;
 
 function App() {
-  const getItems = (count) =>
+  const getItems = (count: number): Item[] =>
     Array.from({ length: count }, (v, k) => k).map((k) => ({
       id: `item-${k}`,
       content: `item ${k}`,
     }));
 
-  const [items, setItems] = useState(getItems(10));
+  const [items, setItems] = useState<Item[]>(getItems(10));
 
-  const reorder = (list, startIndex, endIndex) => {
+  const reorder: Reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
     return result;
   };
 
-  const onDragEnd = useCallback(
+  const onDragEnd: OnDragEnd = useCallback(
     (result) => {
       if (!result.destination) {
         return;
       }
 
-      const newItems = reorder(
-        items,
-        result.source.index,
-        result.destination.index
-      );
+      const newItems = reorder(items, result.source.index, result.destination.index);
 
       setItems(newItems);
     },
@@ -36,7 +42,7 @@ function App() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId='droppable'>
+      <Droppable droppableId="droppable">
         {(provided, snapshot) => (
           <div
             {...provided.droppableProps}
@@ -50,10 +56,10 @@ function App() {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    style={getItemStyle(
-                      snapshot.isDragging,
-                      provided.draggableProps.style
-                    )}
+                    style={getItemStyle({
+                      draggableStyle: provided.draggableProps.style,
+                      isDragging: snapshot.isDragging,
+                    })}
                   >
                     {item.content}
                   </div>
