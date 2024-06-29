@@ -1,4 +1,5 @@
 import DragAndDropBoard from './components/DragAndDropBoard';
+import './global.css';
 
 function App() {
   return (
