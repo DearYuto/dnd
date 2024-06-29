@@ -17,22 +17,22 @@ export const useDragAndDrop = () => {
     (result: DropResult) => {
       const { source, destination } = result;
 
-      if (!destination) {
-        return;
-      }
+      if (!destination) return;
 
       const sourceColumnIndex = parseInt(source.droppableId.replace('column', ''), 10);
       const destinationColumnIndex = parseInt(destination.droppableId.replace('column', ''), 10);
 
+      const newColumns = [...columns];
       const newSourceColumn = [...columns[sourceColumnIndex]];
       const newDestinationColumn = [...columns[destinationColumnIndex]];
 
       const [removed] = newSourceColumn.splice(source.index, 1);
-      newSourceColumn.splice(destination.index, 0, removed);
-      const newColumns = [...columns];
       newColumns[sourceColumnIndex] = newSourceColumn;
 
-      if (sourceColumnIndex !== destinationColumnIndex) {
+      if (sourceColumnIndex === destinationColumnIndex) {
+        newSourceColumn.splice(destination.index, 0, removed);
+      } else {
+        newDestinationColumn.splice(destination.index, 0, removed);
         newColumns[destinationColumnIndex] = newDestinationColumn;
       }
 
