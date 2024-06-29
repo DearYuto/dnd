@@ -1,9 +1,9 @@
 import { Item } from '@/types/item';
 
+const createItem = (index: number): Item => ({
+  id: `item-${index}`,
+  content: `item ${index}`,
+});
+
 export const getItems = (count: number): Item[] =>
-  Array.from({ length: count })
-    .fill(0)
-    .map((_, index) => ({
-      id: `item-${index}`,
-      content: `item ${index}`,
-    }));
+  Array.from({ length: count }, (_, index) => createItem(index));
