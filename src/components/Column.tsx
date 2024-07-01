@@ -16,7 +16,7 @@ const Column = ({ droppableId, column }: Props) => {
   const selectedItemIds = useSelectedItemsValue();
   const setSelectedItemIds = useSelectedItemsUpdate();
 
-  // TODO 배경 눌렀을 때 전체 선택 해제
+  console.log({ selectedItemIds });
 
   const onClick = (item: Item) => () => {
     setSelectedItemIds((prevIds) => {
@@ -28,12 +28,9 @@ const Column = ({ droppableId, column }: Props) => {
     });
   };
 
-  // TODO 선택된 아이템이 여러개 인 경우, 선택하지 않은 아이템을 이동하려고 하면 이동 불가하게 처리하기
   const isDragDisabled = (item: Item) => {
     return selectedItemIds.length > 1 && !selectedItemIds.includes(item.id);
   };
-
-  console.log(selectedItemIds);
 
   return (
     <Droppable droppableId={`column${droppableId}`}>

@@ -4,43 +4,28 @@ import { DropResult } from 'react-beautiful-dnd';
 import type { Column } from '@/types/column';
 
 import { getColumns } from '@/utils/getColumns';
-import { Item } from '@/types/item';
+import { useSelectedItemsValue } from './useSelectedItemsValue';
+import { isMoveAllowed } from '@/utils/isMoveAllowed';
 
 const NUM_COLUMNS = 4;
 const ITEMS_PER_COLUMN = 10;
-
-const isMoveAllowed = (
-  sourceColumnIndex: number,
-  destinationColumnIndex: number,
-  sourceIndex: number,
-  destinationIndex: number,
-  columns: Column[]
-) => {
-  // 첫번째 컬럼 -> 세번째 컬럼 이동 불가
-  if (sourceColumnIndex === 0 && destinationColumnIndex === 2) {
-    return false;
-  }
-
-  const sourceItem = columns[sourceColumnIndex][sourceIndex];
-  const destinationItem = columns[destinationColumnIndex][destinationIndex];
-
-  // 짝수 아이템은 다른 짝수 아이템 이동 불가
-  const isEven = (item: Item) => parseInt(item.id) % 2 === 0;
-  if (isEven(sourceItem) && isEven(destinationItem)) {
-    return false;
-  }
-
-  return true;
-};
 
 export const useDragAndDrop = () => {
   const [columns, setColumns] = useState<Column[]>(
     getColumns({ itemsPerColumn: ITEMS_PER_COLUMN, numColumns: NUM_COLUMNS })
   );
 
+  const selectedItemIds = useSelectedItemsValue();
+
+  console.log(selectedItemIds);
+
+  const onDragStart = () => {};
+
   const onDragEnd = useCallback(
     (result: DropResult) => {
-      const { source, destination } = result;
+      const { source, destination, draggableId } = result;
+
+      console.log(source, destination, draggableId);
 
       if (!destination) return;
 
@@ -82,5 +67,6 @@ export const useDragAndDrop = () => {
   return {
     columns,
     onDragEnd,
+    onDragStart,
   };
 };
