@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
-import { Id } from 'react-beautiful-dnd';
+import React, { createContext, useMemo, useState } from 'react';
+import type { Id } from 'react-beautiful-dnd';
 
 type SelectedItemsUpdateContextProps = React.Dispatch<React.SetStateAction<Id[]>>;
 
@@ -8,9 +8,7 @@ type Props = {
 };
 
 const SelectedItemsContext = createContext<Id[] | null>(null);
-const SelectedItemsUpdateContext = createContext<SelectedItemsUpdateContextProps | null>(
-  () => null
-);
+const SelectedItemsUpdateContext = createContext<SelectedItemsUpdateContextProps | null>(null);
 
 export const SelectedItemsProvider = ({ children }: Props) => {
   const [selectedItemIds, setSelectedItemIds] = useState<Id[]>([]);
@@ -27,22 +25,4 @@ export const SelectedItemsProvider = ({ children }: Props) => {
   );
 };
 
-export const useSelectedItemsValue = (): Id[] => {
-  const context = useContext(SelectedItemsContext);
-
-  if (context === null) {
-    throw new Error('SelectedItemsValueContext가 존재하지 않습니다.');
-  }
-
-  return context;
-};
-
-export const useSelectedItemsUpdate = (): SelectedItemsUpdateContextProps => {
-  const context = useContext(SelectedItemsUpdateContext);
-
-  if (context === null) {
-    throw new Error('SelectedItemsUpdateContext가 존재하지 않습니다.');
-  }
-
-  return context;
-};
+export { SelectedItemsContext, SelectedItemsUpdateContext };
