@@ -3,38 +3,41 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import Column from './Column';
 import styled from 'styled-components';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSelectedItemsUpdate } from '@/hooks/useSelectedItemsUpdate';
-import { useSelectedItemsValue } from '@/hooks/useSelectedItemsValue';
+
+const isClickInsideColumnOrItem = (target: HTMLElement): boolean => {
+  return Boolean(target.closest('.column')) || Boolean(target.closest('.item'));
+};
 
 const DragAndDropBoard = () => {
   const { columns, onDragEnd } = useDragAndDrop();
 
   const setSelectedItemIds = useSelectedItemsUpdate();
 
-  const boardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLDivElement;
-      if (target.classList.contains('column') || target.classList.contains('item')) {
+  const handleClick = useCallback(
+    (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (isClickInsideColumnOrItem(target)) {
         return;
       }
+      setSelectedItemIds([]);
+    },
+    [setSelectedItemIds]
+  );
 
-      setSelectedItemIds(() => []);
-    };
-
+  useEffect(() => {
     window.addEventListener('click', handleClick);
 
     return () => {
       window.removeEventListener('click', handleClick);
     };
-  }, [setSelectedItemIds]);
+  }, [handleClick]);
 
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Section ref={boardRef}>
+        <Section>
           {columns.map((column, index) => {
             return <Column column={column} key={index} droppableId={index} />;
           })}
