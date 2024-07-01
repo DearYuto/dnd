@@ -1,7 +1,5 @@
-import { GRID } from '../constants/style';
-
 export const getListStyle = (isDraggingOver: boolean) => ({
   background: isDraggingOver ? '#c5ddff' : '#ddd',
-  padding: GRID,
+  padding: 8,
   width: 250,
 });
