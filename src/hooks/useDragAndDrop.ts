@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
-import { DragUpdate, DropResult, ResponderProvided } from 'react-beautiful-dnd';
+import { DragUpdate, DropResult } from 'react-beautiful-dnd';
 
 import type { Column } from '@/types/column';
 
 import { getColumns } from '@/utils/getColumns';
-import { useSelectedItemsValue } from './useSelectedItemsValue';
+// import { useSelectedItemsValue } from './useSelectedItemsValue';
 import { isMoveAllowed } from '@/utils/isMoveAllowed';
 
 const NUM_COLUMNS = 4;
@@ -18,7 +18,7 @@ export const useDragAndDrop = () => {
   const [moveNotAllowed, setMoveNotAllowed] = useState(false);
 
   // TODO 멀티 드래그앤드롭 구현
-  const selectedItemIds = useSelectedItemsValue();
+  // const selectedItemIds = useSelectedItemsValue();
 
   const onDragStart = () => {
     setMoveNotAllowed(false);
@@ -26,7 +26,7 @@ export const useDragAndDrop = () => {
 
   const onDragUpdate = useCallback(
     (update: DragUpdate) => {
-      const { source, destination, draggableId } = update;
+      const { source, destination } = update;
 
       if (!destination) return;
 
@@ -54,9 +54,7 @@ export const useDragAndDrop = () => {
 
   const onDragEnd = useCallback(
     (result: DropResult) => {
-      const { source, destination, draggableId } = result;
-
-      console.log(source, destination, draggableId);
+      const { source, destination } = result;
 
       if (!destination) return;
 
