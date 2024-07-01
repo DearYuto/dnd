@@ -1,38 +1,17 @@
+import styled from 'styled-components';
 import { DragDropContext } from 'react-beautiful-dnd';
 
-import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import Column from './Column';
-import styled from 'styled-components';
-import { useCallback, useEffect } from 'react';
-import { useSelectedItemsUpdate } from '@/hooks/useSelectedItemsUpdate';
 
-const isClickInsideColumnOrItem = (target: HTMLElement): boolean => {
-  return Boolean(target.closest('.column')) || Boolean(target.closest('.item'));
-};
+import { useDragAndDrop } from '@/hooks/useDragAndDrop';
+import { useSelectedItemsUpdate } from '@/hooks/useSelectedItemsUpdate';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 const DragAndDropBoard = () => {
   const { columns, onDragEnd } = useDragAndDrop();
 
   const setSelectedItemIds = useSelectedItemsUpdate();
-
-  const handleClick = useCallback(
-    (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (isClickInsideColumnOrItem(target)) {
-        return;
-      }
-      setSelectedItemIds([]);
-    },
-    [setSelectedItemIds]
-  );
-
-  useEffect(() => {
-    window.addEventListener('click', handleClick);
-
-    return () => {
-      window.removeEventListener('click', handleClick);
-    };
-  }, [handleClick]);
+  useClickOutside(() => setSelectedItemIds([]));
 
   return (
     <>
