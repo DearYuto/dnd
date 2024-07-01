@@ -1,4 +1,6 @@
+import { Id } from 'react-beautiful-dnd';
+
 export type Item = {
-  id: string;
+  id: Id;
   content: string;
 };
