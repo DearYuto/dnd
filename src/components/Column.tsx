@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Droppable, Id } from 'react-beautiful-dnd';
+import { Droppable } from 'react-beautiful-dnd';
 
 import type { Column } from '@/types/column';
 
 import Item from './Item';
+import { useSelectedItemsUpdate } from '@/hooks/useSelectedItemsUpdate';
+import { useSelectedItemsValue } from '@/hooks/useSelectedItemsValue';
 
 type Props = {
   column: Column;
@@ -12,22 +13,11 @@ type Props = {
 };
 
 const Column = ({ droppableId, column }: Props) => {
-  const [selectedItemIds, setSelectedItemIds] = useState<Id[]>([]);
+  const selectedItemIds = useSelectedItemsValue();
+  const setSelectedItemIds = useSelectedItemsUpdate();
 
   // TODO 배경 눌렀을 때 전체 선택 해제
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (e.currentTarget !== e.target) return;
 
-      setSelectedItemIds(() => []);
-    };
-
-    window.addEventListener('click', handleClick);
-
-    return () => {
-      window.removeEventListener('click', handleClick);
-    };
-  }, []);
   const onClick = (item: Item) => () => {
     setSelectedItemIds((prevIds) => {
       if (prevIds.includes(item.id)) {
@@ -49,6 +39,7 @@ const Column = ({ droppableId, column }: Props) => {
     <Droppable droppableId={`column${droppableId}`}>
       {(provided, snapshot) => (
         <ListContainer
+          className="column"
           $isDraggingOver={snapshot.isDraggingOver}
           {...provided.droppableProps}
           ref={provided.innerRef}

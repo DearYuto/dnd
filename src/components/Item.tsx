@@ -21,6 +21,7 @@ const Item = ({ item, index, onClick, isSelected, isDragDisabled }: Props) => {
     >
       {(provided, snapshot) => (
         <DraggableItem
+          className="item"
           onClick={onClick(item)}
           $isSelected={isSelected}
           $isDragging={snapshot.isDragging}
