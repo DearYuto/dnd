@@ -2,6 +2,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import Column from './Column';
+import styled from 'styled-components';
 
 const DragAndDropBoard = () => {
   const { columns, onDragEnd } = useDragAndDrop();
@@ -9,14 +10,19 @@ const DragAndDropBoard = () => {
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <section style={{ display: 'flex' }}>
+        <Section>
           {columns.map((column, index) => {
             return <Column column={column} key={index} droppableId={index} />;
           })}
-        </section>
+        </Section>
       </DragDropContext>
     </>
   );
 };
 
 export default DragAndDropBoard;
+
+const Section = styled.section`
+  display: flex;
+  justify-content: center;
+`;
