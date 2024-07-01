@@ -8,17 +8,24 @@ import { useSelectedItemsUpdate } from '@/hooks/useSelectedItemsUpdate';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
 const DragAndDropBoard = () => {
-  const { columns, onDragEnd } = useDragAndDrop();
+  const { columns, onDragEnd, onDragStart, onDragUpdate, moveNotAllowed } = useDragAndDrop();
 
   const setSelectedItemIds = useSelectedItemsUpdate();
   useClickOutside(() => setSelectedItemIds([]));
 
   return (
     <>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragStart={onDragStart} onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
         <Section>
           {columns.map((column, index) => {
-            return <Column column={column} key={index} droppableId={index} />;
+            return (
+              <Column
+                moveNotAllowed={moveNotAllowed}
+                column={column}
+                key={index}
+                droppableId={index}
+              />
+            );
           })}
         </Section>
       </DragDropContext>

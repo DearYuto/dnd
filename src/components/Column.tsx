@@ -9,14 +9,13 @@ import { useSelectedItemsValue } from '@/hooks/useSelectedItemsValue';
 
 type Props = {
   column: Column;
+  moveNotAllowed: boolean;
   droppableId: number;
 };
 
-const Column = ({ droppableId, column }: Props) => {
+const Column = ({ droppableId, column, moveNotAllowed }: Props) => {
   const selectedItemIds = useSelectedItemsValue();
   const setSelectedItemIds = useSelectedItemsUpdate();
-
-  console.log({ selectedItemIds });
 
   const onClick = (item: Item) => () => {
     setSelectedItemIds((prevIds) => {
@@ -43,6 +42,7 @@ const Column = ({ droppableId, column }: Props) => {
         >
           {column.map((item, index) => (
             <Item
+              moveNotAllowed={moveNotAllowed}
               onClick={onClick}
               isSelected={selectedItemIds.includes(item.id)}
               isDragDisabled={isDragDisabled}

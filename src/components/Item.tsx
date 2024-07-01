@@ -4,17 +4,18 @@ import styled from 'styled-components';
 import type { Item } from '@/types/item';
 
 import { useSelectedItemsValue } from '@/hooks/useSelectedItemsValue';
-import { afterStyles, conditionalStyles } from '@/styles/global';
+import { afterStyles, conditionalStyles, getMoveNotAllowedStyles } from '@/styles/global';
 
 type Props = {
   item: Item;
   index: number;
   isSelected: boolean;
+  moveNotAllowed: boolean;
   onClick: (item: Item) => () => void;
   isDragDisabled: (item: Item) => boolean;
 };
 
-const Item = ({ item, index, onClick, isSelected, isDragDisabled }: Props) => {
+const Item = ({ item, index, onClick, moveNotAllowed, isSelected, isDragDisabled }: Props) => {
   const selectedItemIds = useSelectedItemsValue();
 
   return (
@@ -28,6 +29,7 @@ const Item = ({ item, index, onClick, isSelected, isDragDisabled }: Props) => {
         <DraggableItem
           className="item"
           onClick={onClick(item)}
+          $moveNotAllowed={moveNotAllowed}
           $isSelected={isSelected}
           $isDragging={snapshot.isDragging || selectedItemIds.includes(item.id)}
           ref={provided.innerRef}
@@ -46,6 +48,7 @@ export default Item;
 type DraggableItemProps = {
   $isDragging: boolean;
   $isSelected: boolean;
+  $moveNotAllowed: boolean;
   draggableStyle?: DraggingState | NotDraggingStyle | undefined | React.CSSProperties;
 };
 
@@ -64,6 +67,7 @@ const DraggableItem = styled.div<DraggableItemProps>`
   border-radius: 10px;
   overflow: hidden;
   ${({ $isDragging }) => conditionalStyles($isDragging)};
+  ${({ $moveNotAllowed }) => $moveNotAllowed && getMoveNotAllowedStyles()};
   ${({ draggableStyle }) => ({ ...draggableStyle })};
 
   &::after {

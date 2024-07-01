@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { DropResult } from 'react-beautiful-dnd';
+import { DragUpdate, DropResult, ResponderProvided } from 'react-beautiful-dnd';
 
 import type { Column } from '@/types/column';
 
@@ -15,11 +15,42 @@ export const useDragAndDrop = () => {
     getColumns({ itemsPerColumn: ITEMS_PER_COLUMN, numColumns: NUM_COLUMNS })
   );
 
+  const [moveNotAllowed, setMoveNotAllowed] = useState(false);
+
+  // TODO 멀티 드래그앤드롭 구현
   const selectedItemIds = useSelectedItemsValue();
 
-  console.log(selectedItemIds);
+  const onDragStart = () => {
+    setMoveNotAllowed(false);
+  };
 
-  const onDragStart = () => {};
+  const onDragUpdate = useCallback(
+    (update: DragUpdate) => {
+      const { source, destination, draggableId } = update;
+
+      if (!destination) return;
+
+      const sourceColumnIndex = parseInt(source.droppableId.replace('column', ''), 10);
+      const destinationColumnIndex = parseInt(destination.droppableId.replace('column', ''), 10);
+      const newColumns = [...columns];
+
+      if (
+        !isMoveAllowed(
+          sourceColumnIndex,
+          destinationColumnIndex,
+          source.index,
+          destination.index,
+          newColumns
+        )
+      ) {
+        setMoveNotAllowed(() => true);
+        return;
+      }
+
+      setMoveNotAllowed(() => false);
+    },
+    [columns]
+  );
 
   const onDragEnd = useCallback(
     (result: DropResult) => {
@@ -45,7 +76,7 @@ export const useDragAndDrop = () => {
           newColumns
         )
       ) {
-        // TODO 이동 불가 스타일 적용
+        setMoveNotAllowed(() => false);
         return;
       }
 
@@ -60,13 +91,16 @@ export const useDragAndDrop = () => {
       }
 
       setColumns(newColumns);
+      setMoveNotAllowed(false);
     },
     [columns]
   );
 
   return {
     columns,
+    moveNotAllowed,
     onDragEnd,
     onDragStart,
+    onDragUpdate,
   };
 };

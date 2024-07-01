@@ -7,11 +7,11 @@ const isClickInsideColumnOrItem = (target: HTMLElement): boolean => {
 export const useClickOutside = (callback: () => void) => {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
       const target = e.target as HTMLElement;
 
-      if (isClickInsideColumnOrItem(target)) {
-        return;
-      }
+      if (isClickInsideColumnOrItem(target)) return;
 
       callback();
     };

@@ -32,3 +32,9 @@ export const afterStyles = ($isDragging: boolean, $isSelected: boolean) => css`
   color: white;
   padding: 5px;
 `;
+
+export const getMoveNotAllowedStyles = () => css`
+  border: 1px solid red;
+  background-color: #ffd4d4;
+  color: red;
+`;
